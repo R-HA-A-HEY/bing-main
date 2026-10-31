@@ -227,7 +227,7 @@ export async function generateReply(answer, post, theme, history) {
 function getChoice(){
     const choice = [];
     const shuffled = [...IMAGES].sort(() => 0.5 - Math.random());
-    const isNotVaild = 0;
+    let isNotVaild = 0;
     for (let i = 0; i < 3 && i < shuffled.length; i++) {
         if (!shuffled[i].isValid) isNotVaild++;
         choice.push({...shuffled[i]});
