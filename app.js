@@ -129,14 +129,14 @@ async function sendReply(){
             p.textContent=$('replyText').textContent
             history.push({
                 role: "user",
-                parts: [{ text: $('replyText').textContent }]
+                parts: [{ text: `${('replyText').textContent}`}]
             });
         }
         if(sticker){
             img.src = sticker.url;
             history.push({
                 role: "user",
-                parts: [{ text: sticker.description }]
+                parts: [{ text: `（貼圖敘述）${sticker.description}`}]
             });
         }
         const meta=document.createElement('span');
@@ -145,7 +145,7 @@ async function sendReply(){
         el.append(avatar,content);
         $('comments').append(el);
         const pass = getResult(sticker.id, stickerSet.answer.id);
-        if(pass){
+        if(pass || !sticker){
             toast("成功", 2100);
             stickerSet = resume()
             document.querySelectorAll('.stickers button').forEach(b => {
