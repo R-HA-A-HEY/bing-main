@@ -171,10 +171,11 @@ async function sendReply(){
             stamp.textContent=' 剛剛';
             const p=document.createElement('p');
             toast(' AI 正在生成中，請稍候...', 2100);
-            p.textContent = await generateReply(stickerSet.answer.description, postContent, "舒潔 99% 純水濕式面紙", history); 
+            const reply = await generateReply(stickerSet.answer.description, postContent, "舒潔 99% 純水濕式面紙", history);
+            p.textContent = reply;
             history.push({
                 role: "model",
-                parts: [{ text: p.textContent }]
+                parts: [{ text: reply }]
             });
             const meta=document.createElement('span');
             meta.textContent='♡ 0　▢ 0';
