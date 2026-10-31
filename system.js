@@ -169,7 +169,7 @@ export async function generatePost(answer, theme) {
         system_instruction: POST_SYSTEM_INSTRUCTION
     };
     try {
-        const response = await fetch('/ollama-api/generate', {
+        const response = await fetch('/gemini-api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -198,7 +198,7 @@ export async function generateReply(answer, post, reply, theme) {
         system_instruction: REPLY_SYSTEM_INSTRUCTION 
     };
     try {
-        const response = await fetch('/ollama-api/generate', {
+        const response = await fetch('/gemini-api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
