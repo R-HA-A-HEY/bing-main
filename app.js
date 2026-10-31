@@ -126,7 +126,7 @@ async function sendReply(){
         const p=document.createElement('p');
         const img=document.createElement('img');
         if(value){
-            p.textContent=$('replyText').textContent
+            p.textContent=$('replyText').value;
             history.push({
                 role: "user",
                 parts: [{ text: `${('replyText').textContent}`}]
