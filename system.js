@@ -232,7 +232,7 @@ function getChoice(){
         if (!shuffled[i].isValid) isNotVaild++;
         choice.push({...shuffled[i]});
     }
-    if (isNotValidCount > 2) {
+    if (isNotValid > 2) {
         const validSticker = IMAGES.find(img => img.isValid);
         if (validSticker) {
             choice[getRandomInt(3)] = { ...validSticker };
