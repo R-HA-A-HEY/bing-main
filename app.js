@@ -58,7 +58,7 @@ $('startBtn').onclick=async()=>{
     liked = false;
     try{
         postContent = await generatePost(stickerSet.answer.description, "舒潔 99% 純水濕式面紙");
-        $("post-content").textContent = postContent;
+        document.querySelectorAll('.post-content').forEach(p => p.textContent = postContent);
         const reply1 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
         const reply2 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
         $('comments').innerHTML=`<div class="reply"><span class="avatar small"></span><div><b>aaa_yoon</b> <small>3秒前</small><p>${reply1}</p><span>♡ 1234　▢ 1234</span><div class="reply nested"><span class="avatar small"></span><div><b>aaa_yoon</b> <small>3秒前</small><p>${reply2}</p><span>♡ 1234　▢ 1234</span></div></div></div></div>`;
