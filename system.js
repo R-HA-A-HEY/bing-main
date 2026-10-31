@@ -189,13 +189,13 @@ export async function generatePost(answer, theme) {
     }
 }
 //生成回覆
-export async function generateReply(answer, post, reply, theme, history) {
+export async function generateReply(answer, post, theme, history) {
     const historyText = history.length > 0 ? history.map(h => {
         const roleName = h.role === 'user' ? 'USER' : 'MODEL';
         const content = h.parts && h.parts[0] ? h.parts[0].text : '';
         return `【${roleName}】：${content}`;
       }).join('\n') : '無過往對話紀錄';
-    const userPrompt =  `【對話紀錄】：\n${historyText}\n\n【本次貼文內容】：${post}\n【本次正確答案】： ${answer}\n【本次貼文主題】：${theme}\n請依照指示回覆玩家。${reply ? reply : ''}`;
+    const userPrompt =  `【對話紀錄】：\n${historyText}\n\n【本次貼文內容】：${post}\n【本次正確答案】： ${answer}\n【本次貼文主題】：${theme}\n請依照指示回覆玩家。`;
     const payload = {
         prompt: userPrompt,
         system_instruction: REPLY_SYSTEM_INSTRUCTION 
