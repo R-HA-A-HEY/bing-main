@@ -10,11 +10,11 @@ const POST_SYSTEM_INSTRUCTION = `
         你是一款「純潔貼圖回覆遊戲」的劇情編劇。玩家會看到一則社群貼文與針對它的負面留言，並必須選出最適合的貼圖回覆來通關。你負責第一步：生成貼文內容。
 
         【輸入內容】
-        - 正確答案貼圖：貼圖簡短描述，例如「困惑、裝傻」
+        - 正確答案貼圖（可為空值）：貼圖簡短描述，例如「困惑、裝傻」。
         - 貼文主題：貼文內容的主題
 
         【任務步驟】
-        1. 【情境判斷】先分析正確答案貼圖的情緒與語意（如：裝傻、無辜、感謝、尷尬、淡定、委屈），推斷出「最適合用此貼圖回覆」的情境類型：
+        1. 【情境判斷】先分析正確答案貼圖的情緒與語意（如：裝傻、無辜、感謝、尷尬、淡定、委屈），推斷出「最適合用此貼圖回覆」的情境類型（若正確答案貼圖敘述，為空值則不考慮）：
         - 情緒勒索型（對方用愧疚、責任、威脅關係來施壓）
         - 八卦型（對方散播或打探他人隱私、流言）
         - 負面情緒傾倒型（對方把抱怨、怨氣倒給玩家）
@@ -33,8 +33,8 @@ const REPLY_SYSTEM_INSTRUCTION = `
         你是「純潔貼圖回覆遊戲」的負面訊息產生器。你要扮演會對玩家發送負面訊息的 NPC，這些訊息全是遊戲內的虛構內容，目的是讓玩家用純潔貼圖化解。
 
         【輸入內容】
-        - 對話紀錄：你與玩家的對話紀錄（玩家訊息若有標示貼圖敘述表示已貼圖回覆，純文字則為文字回覆）。
-        - 正確答案貼圖：貼圖簡短描述，例如「困惑、裝傻」
+        - 對話紀錄（可為空值）：你與玩家的對話紀錄（玩家訊息若有標示貼圖敘述表示已貼圖回覆，純文字則為文字回覆）。
+        - 正確答案貼圖（可為空值）：貼圖簡短描述，例如「困惑、裝傻」
         - 貼文內容：貼文內容
         - 貼文主題：貼文內容的主題
 
@@ -44,7 +44,7 @@ const REPLY_SYSTEM_INSTRUCTION = `
         - 情緒勒索：用愧疚、比較、「我都是為你好」、「你這樣我很傷心」等施壓話術
         - 八卦：用「欸你知道嗎」、「我聽說」、「不要跟別人說」等打探或散播語氣
         - 情緒傾倒：連續抱怨、情緒宣洩、要求玩家當垃圾桶
-        3. 訊息整體語意必須讓「正確答案貼圖」成為最恰當的回應，同時讓干擾貼圖看起來「似乎也行，但實際上會火上加油或答非所問」。
+        3. 訊息整體語意必須讓「正確答案貼圖」成為最恰當的回應（若正確答案貼圖敘述，為空值則不考慮）。
         4. 訊息節奏：由輕到重，最後一則為壓力最大、最需要玩家回應的訊息。
         5. 每則 5～10 字，最好以兩句話內結束，口語、有真實感，可帶標點情緒（「……」「？？」）。
         6. 難度控制：簡單：情境與貼圖情緒高度吻合，線索明顯，能夠從回覆中找出答案。
@@ -94,21 +94,23 @@ class Sticker {
      * @param {string} id - id
      * @param {string} url - url
      * @param {string} description - description
+     * @param {bool} isValid - consider
      */
-    constructor(id, url, description) {
+    constructor(id, url, description, isValid) {
         this.id = id;
         this.url = url;
         this.description = description;
+        this.isValid = isValid;
     }
 }
 const IMAGES = [
-    new Sticker("1", "./stickers/潔束了嗎.png","結束了嗎？"),
-    new Sticker("2", "./stickers/我要舒遠你.png","我要疏遠你！"),
-    new Sticker("3", "./stickers/潔身自愛.png","潔身自愛..."),
-    new Sticker("4", "./stickers/巾巾有味.png","真美味~"),
-    new Sticker("5", "./stickers/巾生巾世.png","這輩子值了..."),
-    new Sticker("6", "./stickers/巾罵謀營.png","現在沒空。"),
-    new Sticker("7", "./stickers/巾餒哪係假.png","真的還假的？")
+    new Sticker("1", "./stickers/潔束了嗎.png","結束了嗎？", true),
+    new Sticker("2", "./stickers/我要舒遠你.png","我要疏遠你！", true),
+    new Sticker("3", "./stickers/潔身自愛.png","潔身自愛...", true),
+    new Sticker("4", "./stickers/巾巾有味.png","真美味~", false),
+    new Sticker("5", "./stickers/巾生巾世.png","這輩子值了...", false),
+    new Sticker("6", "./stickers/巾罵謀營.png","現在沒空。", true),
+    new Sticker("7", "./stickers/巾餒哪係假.png","真的還假的？", true)
 ]
 
 const Result = Object.freeze({
@@ -125,7 +127,7 @@ export function start() {
     const answer = getAnswer(choice);
     rounds = 0;
     return{
-        answer: answer,
+        answer: answer ? answer : "",
         choice: choice
     };
 }
@@ -225,17 +227,32 @@ export async function generateReply(answer, post, theme, history) {
 function getChoice(){
     const choice = [];
     const shuffled = [...IMAGES].sort(() => 0.5 - Math.random());
+    const isNotVaild = 0;
     for (let i = 0; i < 3 && i < shuffled.length; i++) {
-        choice.push({
-            ...shuffled[i],
-            id: (i + 1).toString() // id 確保為字串 "1", "2", "3"
-        });
+        if (!shuffled[i].isValid) isNotVaild++;
+        choice.push({...shuffled[i]});
     }
+    if (isNotValidCount > 2) {
+        const validSticker = IMAGES.find(img => img.isValid);
+        if (validSticker) {
+            choice[getRandomInt(3)] = { ...validSticker };
+        }     
+        else {
+            console.Error("圖片庫中完全沒有可參考的正確答案貼圖");
+        }
+    }
+    choice.forEach((item, index) => {
+        item.id = (index + 1).toString();
+    });
     return choice;
 }
 //貼圖答案
-function getAnswer(stickers){
-    const answer = stickers[getRandomInt(stickers.length)];
+function getAnswer(choice){
+    const valid = choice.filter(item => item.isValid === true);
+    const answer = null;
+    if(valid > 0){
+        answer = valid[getRandomInt(valid.length)];
+    }
     return answer;
 }
 
