@@ -144,8 +144,8 @@ async function sendReply(){
         content.append(title,stamp,p,img,meta);
         el.append(avatar,content);
         $('comments').append(el);
-        const pass = getResult(sticker.id, stickerSet.answer.id);
-        if(pass || !sticker){
+        const pass = sticker ? getResult(sticker.id, stickerSet.answer.id) : true;
+        if(pass){
             toast("成功", 2100);
             stickerSet = resume()
             document.querySelectorAll('.stickers button').forEach(b => {
