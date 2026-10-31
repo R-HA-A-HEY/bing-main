@@ -3,6 +3,7 @@ let timeLimit = 5.00;
 let timer = null;
 const isRunning = false;
 export let rounds = 0;
+export let history = []
 
 const POST_SYSTEM_INSTRUCTION = `
         【角色設定】
@@ -11,7 +12,6 @@ const POST_SYSTEM_INSTRUCTION = `
         【輸入內容】
         - 正確答案貼圖：貼圖簡短描述，例如「困惑、裝傻」
         - 貼文主題：貼文內容的主題
-        - 難度：簡單
 
         【任務步驟】
         1. 【情境判斷】先分析正確答案貼圖的情緒與語意（如：裝傻、無辜、感謝、尷尬、淡定、委屈），推斷出「最適合用此貼圖回覆」的情境類型：
@@ -24,10 +24,7 @@ const POST_SYSTEM_INSTRUCTION = `
         - 字數 10～50 字，使用台灣日常口語，可帶少量 emoji，但禁止輸出 emoji 的敘述（如：笑嘻嘻、大哭）。
         - 貼文本身要埋下「可被曲解、可被攻擊、可被拿來說八卦」的素材（人物、事件、時間點、模糊的說法）。
         - 貼文必須讓正確答案貼圖「合理但不唯一顯眼」：玩家需要推理才會想到，不可在貼文中直接暗示答案貼圖名稱。
-        - 難度控制：
-        - 簡單：情境與貼圖情緒高度吻合，線索明顯
-        - 普通：有一個干擾方向，需要看懂語氣
-        - 困難：貼文含雙重含義，需判斷對方真正意圖
+        - 難度控制：情境與貼圖情緒高度吻合，線索明顯，能夠從回覆中找出答案。
         - 內容須維持輕鬆荒謬、職場／校園／家族／朋友圈等生活化題材，不得包含真實人名、仇恨、歧視、性暗示、自傷或暴力內容。
 
         【輸出格式】僅輸出回覆內容，不要多餘說明。`;
@@ -36,14 +33,14 @@ const REPLY_SYSTEM_INSTRUCTION = `
         你是「純潔貼圖回覆遊戲」的負面訊息產生器。你要扮演會對玩家發送負面訊息的 NPC，這些訊息全是遊戲內的虛構內容，目的是讓玩家用純潔貼圖化解。
 
         【輸入內容】
+        - 對話紀錄：你與玩家的對話紀錄
         - 正確答案貼圖：貼圖簡短描述，例如「困惑、裝傻」
         - 貼文內容：貼文內容
         - 貼文主題：貼文內容的主題
         - 玩家訊息（可留空）：貼圖的敘述（含意）
-        - 難度：簡單
 
         【生成規則】
-        1. 所有負面訊息必須「直接承接貼文內容、貼文主題」，引用貼文中的人事物或細節，不可憑空捏造無關事件。
+        1. 所有負面訊息必須「直接承接對話紀錄、貼文內容、貼文主題」，引用貼文中的人事物或細節，不可憑空捏造無關事件。
         2. 依情境類型調整語氣：
         - 情緒勒索：用愧疚、比較、「我都是為你好」、「你這樣我很傷心」等施壓話術
         - 八卦：用「欸你知道嗎」、「我聽說」、「不要跟別人說」等打探或散播語氣
@@ -51,10 +48,7 @@ const REPLY_SYSTEM_INSTRUCTION = `
         3. 訊息整體語意必須讓「正確答案貼圖」成為最恰當的回應，同時讓干擾貼圖看起來「似乎也行，但實際上會火上加油或答非所問」。
         4. 訊息節奏：由輕到重，最後一則為壓力最大、最需要玩家回應的訊息。
         5. 每則 5～10 字，最好以兩句話內結束，口語、有真實感，可帶標點情緒（「……」「？？」）。
-        6. 難度控制：
-        - 簡單：情境與貼圖情緒高度吻合，線索明顯
-        - 普通：有一個干擾方向，需要看懂語氣
-        - 困難：貼文含雙重含義，需判斷對方真正意圖
+        6. 難度控制：簡單：情境與貼圖情緒高度吻合，線索明顯，能夠從回覆中找出答案。
         7. 嚴格禁止：真實人名／品牌、髒話、人身攻擊、歧視、性暗示、自傷自殺內容、現實可套用的個資或暴力威脅。負面程度以「煩人、酸、尷尬」為上限，保持遊戲的荒謬幽默感。
         8. 不得在訊息中提及貼圖或暗示「請傳貼圖」。
 
@@ -109,9 +103,13 @@ class Sticker {
     }
 }
 const IMAGES = [
-    new Sticker("1", "./stickers/潔束了嗎.png","結束了嗎"),
-    new Sticker("2", "./stickers/我要舒遠你.png","我要疏遠你"),
-    new Sticker("3", "./stickers/潔身自愛.png","潔身自愛")
+    new Sticker("1", "./stickers/潔束了嗎.png","結束了嗎？"),
+    new Sticker("2", "./stickers/我要舒遠你.png","我要疏遠你！"),
+    new Sticker("3", "./stickers/潔身自愛.png","潔身自愛..."),
+    new Sticker("4", "./stickers/巾巾有味.png","真美味~"),
+    new Sticker("5", "./stickers/巾生巾世.png","這輩子值了..."),
+    new Sticker("6", "./stickers/巾罵謀營.png","現在沒空。"),
+    new Sticker("7", "./stickers/巾餒哪係假.png","真的還假的？")
 ]
 
 const Result = Object.freeze({
@@ -191,8 +189,13 @@ export async function generatePost(answer, theme) {
     }
 }
 //生成回覆
-export async function generateReply(answer, post, reply, theme) {
-    const userPrompt =  `【本次貼文內容】：${post}\n【本次正確答案】： ${answer}\n【本次貼文主題】：${theme}\n請依照指示回覆玩家。${reply ? reply : ''}`;
+export async function generateReply(answer, post, reply, theme, history) {
+    const historyText = history.length > 0 ? history.map(h => {
+        const roleName = h.role === 'user' ? 'USER' : 'MODEL';
+        const content = h.parts && h.parts[0] ? h.parts[0].text : '';
+        return `【${roleName}】：${content}`;
+      }).join('\n') : '無過往對話紀錄';
+    const userPrompt =  `【對話紀錄】：\n${historyText}\n\n【本次貼文內容】：${post}\n【本次正確答案】： ${answer}\n【本次貼文主題】：${theme}\n請依照指示回覆玩家。${reply ? reply : ''}`;
     const payload = {
         prompt: userPrompt,
         system_instruction: REPLY_SYSTEM_INSTRUCTION 

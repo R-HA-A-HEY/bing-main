@@ -4,7 +4,7 @@ import { start, generatePost, generateReply, getResult, getScore, rounds, resume
 const $=id=>document.getElementById(id);
 let nickname='不要醬紙',selectedSticker=null,liked=false;
 const entries=[];
-let stickerSet=null, postContent=null;
+let stickerSet=null, postContent=null, history=null;
 
 function toast(s, time){
     $('toast').textContent=s;$('toast').classList.add('show');
@@ -56,11 +56,24 @@ $('startBtn').onclick=async()=>{
     stickerSet = start();
     selectedSticker = null;
     liked = false;
+    history = [];
     try{
         postContent = await generatePost(stickerSet.answer.description, "舒潔 99% 純水濕式面紙");
-        document.querySelectorAll('.post-content').forEach(p => p.textContent = postContent);
+        history.push({
+            role: "user",
+            parts: [{ text: postContent }]
+        });
+        document.querySelectorAll('#post-content').forEach(p => p.textContent = postContent);
         const reply1 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
+        history.push({
+            role: "model",
+            parts: [{ text: reply1 }]
+        });
         const reply2 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
+        history.push({
+            role: "model",
+            parts: [{ text: reply2 }]
+        });
         $('comments').innerHTML=`<div class="reply"><span class="avatar small"></span><div><b>aaa_yoon</b> <small>3秒前</small><p>${reply1}</p><span>♡ 1234　▢ 1234</span><div class="reply nested"><span class="avatar small"></span><div><b>aaa_yoon</b> <small>3秒前</small><p>${reply2}</p><span>♡ 1234　▢ 1234</span></div></div></div></div>`;
         document.querySelectorAll('.stickers button').forEach(b=>{
             b.classList.remove('selected');
@@ -113,10 +126,18 @@ async function sendReply(){
         const p=document.createElement('p');
         const img=document.createElement('img');
         if(value){
-            p.textContent=value
+            p.textContent=$('replyText').textContent
+            history.push({
+                role: "user",
+                parts: [{ text: $('replyText').textContent }]
+            });
         }
         if(sticker){
             img.src = sticker.url;
+            history.push({
+                role: "user",
+                parts: [{ text: sticker.description }]
+            });
         }
         const meta=document.createElement('span');
         meta.textContent='♡ 0　▢ 0';
@@ -149,8 +170,12 @@ async function sendReply(){
             const stamp=document.createElement('small');
             stamp.textContent=' 剛剛';
             const p=document.createElement('p');
-            toast(' AI 正在生成中，請稍候...', 20000);
-                p.textContent = await generateReply(stickerSet.answer.description, postContent, sticker.description, "舒潔 99% 純水濕式面紙"); 
+            toast(' AI 正在生成中，請稍候...', 2100);
+            p.textContent = await generateReply(stickerSet.answer.description, postContent, sticker.description, "舒潔 99% 純水濕式面紙"); 
+            history.push({
+                role: "model",
+                parts: [{ text: p.textContent }]
+            });
             const meta=document.createElement('span');
             meta.textContent='♡ 0　▢ 0';
             content.append(title,stamp,p,meta);
