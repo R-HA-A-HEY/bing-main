@@ -1,0 +1,193 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#2048fa"><title>舒潔水啦｜舒潔互動挑戰</title><link rel="stylesheet" href="style.css?v=20261031-fix3"><style id="layout-safety">
+/* Critical layout is inline so images cannot explode if CSS is delayed or cached. */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;max-width:100%;overflow-x:hidden}
+body{background:#243b3d}
+.site{position:relative;width:100%;max-width:390px;margin:0 auto;min-height:100vh;background:#ffff91;overflow:hidden}
+.site img{max-width:100%;height:auto}
+.status{height:30px;background:#2048fa;color:white;text-align:center;font-size:10px;display:flex;align-items:center;justify-content:center}
+.header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:4px 6%;position:relative;z-index:5}
+.logo{display:block;width:80px;height:44px;padding:0;border:0;background:transparent;flex:none}
+.logo img{display:block;width:100%;height:100%;object-fit:contain}
+.hamburger{border:0;background:none;width:40px}
+.page{display:none;position:relative;max-width:100%;overflow:hidden}
+.page.active{display:block}
+.home.active{display:flex;flex-direction:column;min-height:calc(100svh - 82px)}
+.hero-area{position:relative;flex:1;min-height:350px;width:100%}
+.hero-area .tissue,.hero-area .comment{position:absolute;height:auto;max-width:none}
+.hero-area .tissue{width:44%}.hero-area .comment{width:39%}
+.hero-title{position:absolute;z-index:2;left:8%;right:8%;top:30%;font-size:clamp(40px,13vw,64px);display:flex;justify-content:space-between;margin:0}
+.join{display:block;flex:none;width:76%;height:54px;margin:0 auto 24px}
+.nickname .decor{position:relative;height:600px;overflow:hidden}
+.nickname .dt,.nickname .dc{position:absolute;max-width:none;height:auto}
+.result-pack{position:relative;max-width:390px;width:100%;overflow:hidden}
+.result-pack>img{max-width:none}
+@media(min-width:600px){.site{width:390px}.hero-title{font-size:64px}}
+</style></head>
+<body>
+    <div class="site">
+        <div class="status">我用的格式是蘋果18這邊是狀態欄</div>
+        <header class="header">
+            <button class="logo" data-page="home" aria-label="回首頁">
+                <img src="sujie/舒潔總-04.png" alt="舒潔 Kleenex">
+            </button>
+            <button class="hamburger" id="menuBtn" aria-label="開啟選單"><i></i><i></i><i></i></button>
+        </header>
+        <main>
+            <section class="page home active" id="home">
+                <div class="hero-area">
+                    <img class="tissue t1" src="sujie/舒潔總-05.png" alt="">
+                    <img class="tissue t2" src="sujie/舒潔總-05.png" alt="">
+                    <img class="tissue t3" src="sujie/舒潔總-05.png" alt="">
+                    <img class="tissue t4" src="sujie/舒潔總-05.png" alt="">
+                    <img class="comment c1" src="sujie/舒潔總-06.png" alt="留言">
+                    <img class="comment c2" src="sujie/舒潔總-06.png" alt="留言">
+                    <img class="comment c3" src="sujie/舒潔總-06.png" alt="留言">
+                    <img class="comment c4" src="sujie/舒潔總-06.png" alt="留言">
+                    <h1 class="hero-title"><span>舒</span><span>潔</span><span>水</span><span>啦</span></h1>
+                </div>
+                <button class="join" data-page="nickname">加入挑戰</button>
+            </section>
+            <section class="page nickname" id="nickname">
+                <h2>輸入暱稱</h2>
+                <label for="nicknameInput">暱稱 (最多10個字，將顯示至排行榜)</label>
+                <div class="nick-row">
+                    <input id="nicknameInput" maxlength="10" value="不要醬紙" placeholder="輸入暱稱">
+                    <button id="randomName">隨機</button>
+                </div>
+                <div class="nick-actions">
+                    <button data-page="home">返回首頁</button>
+                    <button id="startBtn">開始回復</button>
+                </div>
+                <div class="decor">
+                    <img class="dt d1" src="sujie/舒潔總-05.png" alt="">
+                    <img class="dt d2" src="sujie/舒潔總-05.png" alt="">
+                    <img class="dt d3" src="sujie/舒潔總-05.png" alt="">
+                    <img class="dt d4" src="sujie/舒潔總-05.png" alt="">
+                    <img class="dc dc1" src="sujie/舒潔總-06.png" alt="">
+                    <img class="dc dc2" src="sujie/舒潔總-06.png" alt="">
+                    <img class="dc dc3" src="sujie/舒潔總-06.png" alt="">
+                    <img class="dc dc4" src="sujie/舒潔總-06.png" alt="">
+                </div>
+            </section>
+            <section class="page thread" id="thread">
+                <img class="thread-bg bg1" src="sujie/舒潔總-05.png" alt="">
+                <img class="thread-bg bg2" src="sujie/舒潔總-05.png" alt="">
+                <div class="post">
+                    <div class="profile"><span class="avatar"></span><strong>kleenex_ › 新品上市</strong></div>
+                    <p id="post-content">載入中...</p>
+                    <img class="post-product" src="sujie/舒潔總-07.png" alt="舒潔濕式面紙">
+                    <div class="social">
+                        <button id="postLike">♡ <span id="likeCount">1234</span></button>
+                        <span>▢ 1234</span>
+                    </div>
+                    <div class="sort">
+                        <strong>最相關 ﹀</strong>
+                        <span>查看動態 ›</span>
+                    </div>
+                    <div id="comments">
+                        <div class="reply">
+                            <span class="avatar small"></span>
+                            <div>
+                                <b>aaa_yoon</b> 
+                                <small>3秒前</small>
+                                <p>笑死 看起來有夠難用</p>
+                                <span>♡ 1234　▢ 1234</span>
+                                <div class="reply nested">
+                                    <span class="avatar small"></span>
+                                    <div>
+                                        <b>aaa_yoon</b> 
+                                        <small>3秒前</small>
+                                        <p>笑死 看起來有夠難用</p>
+                                        <span>♡ 1234　▢ 1234</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reply-input">
+                        <span class="avatar small"></span>
+                        <input id="replyText" placeholder="新增回覆..." maxlength="120">
+                        <button id="sendReply">送出</button>
+                    </div>
+                    <div class="stickers">
+                        <button data-sticker="1">
+                            <img src="./stickers/潔束了嗎.png" alt="潔束了嗎">
+                        </button>
+                        <button data-sticker="2">
+                            <img src="./stickers/我要舒遠你.png" alt="我要舒遠你">
+                        </button>
+                        <button data-sticker="3">
+                            <img src="./stickers/潔身自愛.png" alt="潔身自愛">
+                        </button>
+                    </div>
+                    <div class="thread-footer"></div>
+                </div></section>
+            <section class="page ranking" id="ranking">
+                <h2>排行榜</h2>
+                <div class="rank-box" id="rankBox">
+                    <p class="empty-rank">目前尚無挑戰紀錄<br>完成挑戰後會顯示在這裡</p>
+                </div>
+                <div class="ad">
+                    <button id="adPrev" aria-label="上一則廣告"></button>
+                    <span>廣告</span>
+                    <button id="adNext" aria-label="下一則廣告"></button>
+                </div>
+            </section>
+            <section class="page exchange" id="exchange">
+                <h2>兌換資訊</h2>
+                <div class="exchange-card">
+                    <img src="sujie/舒潔總-07.png" alt="舒潔濕式面紙">
+                    <h3>挑戰完成後如何兌換？</h3>
+                    <p>完成挑戰後，請依現場工作人員指示確認兌換資格及領取方式。</p>
+                    <p class="note">實際活動日期、地點、數量及兌換規則尚待主辦單位公布。本頁不提供有效兌換憑證。</p>
+                    <button data-page="nickname">前往挑戰</button>
+                </div>
+            </section>
+            <section class="page result" id="result">
+                <div class="result-pack">
+                    <img src="sujie/舒潔總-08.png" alt="舒潔濕紙巾背面">
+                    <div class="result-copy">
+                        <b>醒民已被擦掉</b>
+                        <br>小編連夜沒被防！<br>
+                        <strong id="score">1234分</strong>
+                        <br>剛好最佳<br>恭喜完成挑戰<br>交給工作人員掃描條碼<br>領取濕巾一份
+                        <div class="qr" id="qr">QR</div>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button id="saveResult">儲存圖片</button>
+                    <button id="shareResult">發到Threads</button>
+                    <button id="replay">再玩一次</button>
+                </div>
+                <div class="result-post">
+                    <div class="profile">
+                        <span class="avatar"></span>
+                        </span><strong>kleenex_ › 新品上市</strong>
+                    </div>
+                    <p>新品上市～～<br>這次主打高韌性的純水濕巾</p>
+                    <img src="sujie/舒潔總-07.png" alt="產品">
+                    <div class="social">♡ 1234　▢ 1234</div>
+                    <div class="sort">
+                        <strong>最相關 ﹀</strong>
+                        <span>查看動態 ›</span>
+                    </div>
+                    <div id="resultComments"></div>
+                </div>
+            </section>
+        </main>
+        <div class="menu-shade" id="menuShade"></div>
+        <nav class="menu" id="menu">
+            <button class="close-menu" id="closeMenu" aria-label="關閉選單">×</button>
+            <button data-page="home">首頁</button>
+            <button data-page="nickname">挑戰頁面</button>
+            <button data-page="ranking">排行榜</button>
+            <button data-page="exchange">兌換資訊</button>
+            <button id="faqBtn">常見問題</button>
+            <img src="sujie/舒潔總-04.png" alt="舒潔">
+        </nav>
+        <div class="toast" id="toast" role="status"></div>
+    </div>
+    <script type="module" src="app.js?v=20261031-fix3"></script>
+    </body>
+</html>

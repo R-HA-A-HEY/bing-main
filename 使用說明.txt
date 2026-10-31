@@ -1,0 +1,3 @@
+將 index.html、style.css、app.js 覆蓋 GitHub Pages 根目錄的同名檔案。
+保留原本 sujie/ 資料夾及圖片，不必重傳。
+本次：縮小頂部藍色 HEAD 與導覽列；資訊頁移至首屏以下；濕巾及留言位置改為不對稱排列。
