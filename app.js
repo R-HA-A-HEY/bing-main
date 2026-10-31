@@ -64,12 +64,12 @@ $('startBtn').onclick=async()=>{
             parts: [{ text: postContent }]
         });
         document.querySelectorAll('#post-content').forEach(p => p.textContent = postContent);
-        const reply1 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
+        const reply1 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙", history);
         history.push({
             role: "model",
             parts: [{ text: reply1 }]
         });
-        const reply2 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙");
+        const reply2 = await generateReply(stickerSet.answer.description, postContent, "", "舒潔 99% 純水濕式面紙", history);
         history.push({
             role: "model",
             parts: [{ text: reply2 }]
@@ -171,7 +171,7 @@ async function sendReply(){
             stamp.textContent=' 剛剛';
             const p=document.createElement('p');
             toast(' AI 正在生成中，請稍候...', 2100);
-            p.textContent = await generateReply(stickerSet.answer.description, postContent, sticker.description, "舒潔 99% 純水濕式面紙"); 
+            p.textContent = await generateReply(stickerSet.answer.description, postContent, sticker.description, "舒潔 99% 純水濕式面紙", history); 
             history.push({
                 role: "model",
                 parts: [{ text: p.textContent }]
