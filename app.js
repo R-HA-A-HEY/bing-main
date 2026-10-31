@@ -184,7 +184,7 @@ async function sendReply(){
             $('comments').append(el);
         }
         else {
-            toast("失敗", 2100);
+            toast(`失敗，正確答案為${stickerSet.answer.description}`, 2100);
             $('score').textContent=getScore()+'分';
             entries.push({name:nickname,score});
             $('resultComments').innerHTML='';
