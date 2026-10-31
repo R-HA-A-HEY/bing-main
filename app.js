@@ -123,8 +123,6 @@ async function sendReply(){
         content.append(title,stamp,p,img,meta);
         el.append(avatar,content);
         $('comments').append(el);
-        console.debug(sticker.id);
-        console.debug(stickerSet.answer.id);
         const pass = getResult(sticker.id, stickerSet.answer.id);
         if(pass){
             toast("成功", 2100);
@@ -147,7 +145,7 @@ async function sendReply(){
             avatar.className='avatar small';
             const content=document.createElement('div');
             const title=document.createElement('b');
-            title.textContent=nickname;
+            title.textContent=aaa_yoon;
             const stamp=document.createElement('small');
             stamp.textContent=' 剛剛';
             const p=document.createElement('p');
