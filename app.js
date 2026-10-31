@@ -166,9 +166,9 @@ async function sendReply(){
             avatar.className='avatar small';
             const content=document.createElement('div');
             const title=document.createElement('b');
-            title.textContent=aaa_yoon;
+            title.textContent='aaa_yoon';
             const stamp=document.createElement('small');
-            stamp.textContent=' 剛剛';
+            stamp.textContent='剛剛';
             const p=document.createElement('p');
             toast(' AI 正在生成中，請稍候...', 2100);
             const reply = await generateReply(stickerSet.answer.description, postContent, "舒潔 99% 純水濕式面紙", history);
