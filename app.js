@@ -176,7 +176,6 @@ async function sendReply(){
     toast('連線失敗，請重新再試一次', 2100);
     }
     finally {
-        // 7. 【關鍵修復】無論成功、失敗還是未輸入，最後一律重新啟用傳送按鈕！
         $('sendReply').disabled = false;
     }
 }

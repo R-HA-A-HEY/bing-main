@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 # OLLAMA_MODEL = "qwen2.5:7b"
 # OLLAMA_CLIENT = ollama.AsyncClient()
-GEMINI_MODEL = "gemini-3.5-flash"
+GEMINI_MODEL = "gemini-3.5-flash-lite"
 GEMINI_CLIENT = genai.Client(api_key = os.environ.get("GEMINI_API_KEY"))
 api = FastAPI(title = "API")
 origins = [
