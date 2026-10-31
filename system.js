@@ -235,7 +235,7 @@ function getChoice(){
     if (isNotValid > 2) {
         const validSticker = IMAGES.find(img => img.isValid);
         if (validSticker) {
-            choice[getRandomInt(3)] = { ...validSticker };
+            choice[getRandomInt(2)] = { ...validSticker };
         }     
         else {
             console.Error("圖片庫中完全沒有可參考的正確答案貼圖");
